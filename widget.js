@@ -334,7 +334,7 @@
             <div class="oj-route-code">${esc(flight.from)}</div>
             <div class="oj-route-city">${esc(flight.from_city)}</div>
           </div>
-          <div class="oj-arrow"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 56 22" width="38" height="14" style="display:block"><path d="M2,11 Q5,10 48,9.5 L54,11 48,12.5 Q5,12 2,11Z" fill="rgba(13,59,102,0.35)"/><path d="M33,11 L50,19.5 L39,11 L50,2.5Z" fill="rgba(13,59,102,0.35)"/><ellipse cx="19" cy="10" rx="9" ry="2" fill="rgba(13,59,102,0.28)"/><path d="M8,11 L13,4.5 L15,4.5 L15,11Z" fill="rgba(13,59,102,0.35)"/><path d="M5,10 L15,10 L15,12 L5,12Z" fill="rgba(13,59,102,0.35)"/></svg></div>
+          <div class="oj-arrow"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 24" width="44" height="16" style="display:block"><g fill="rgba(13,59,102,0.4)"><!-- Fuselage --><rect x="4" y="10" width="48" height="4" rx="2"/><ellipse cx="52" cy="12" rx="6" ry="2.2"/><!-- Aile principale delta --><path d="M18,12 L32,2 L36,12Z"/><path d="M18,12 L32,22 L36,12Z"/><!-- Dérive verticale --><path d="M6,12 L6,6 L10,12Z"/><!-- Moteurs (nacelles) --><rect x="24" y="8" width="8" height="2" rx="1"/><rect x="24" y="14" width="8" height="2" rx="1"/></g></svg></div>
           <div class="oj-route-item">
             <div class="oj-route-code">${esc(flight.to)}</div>
             <div class="oj-route-city">${esc(flight.to_city)}</div>
