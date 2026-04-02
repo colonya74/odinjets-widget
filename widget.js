@@ -325,12 +325,12 @@
         <div class="oj-aircraft-header">
           <a href="${esc(flight.aircraft_url || '#')}" class="oj-aircraft-link" target="_blank" rel="noopener">${esc(flight.aircraft || '')}</a>
         </div>
-        <a href="${esc(flight.aircraft_url || '#')}" class="oj-thumb-link" target="_blank" rel="noopener">
+        <div class="oj-thumb-link" data-url="${esc(flight.aircraft_url || '')}">
           <img class="oj-flight-thumb"
             src="${esc(flight.image || PLACEHOLDER_IMG)}"
             alt="${esc(flight.from)} → ${esc(flight.to)}"
             onerror="this.src='${PLACEHOLDER_IMG}'">
-        </a>
+        </div>
         <div class="oj-flight-route">
           <div class="oj-route-item">
             <div class="oj-route-code">${esc(flight.from)}</div>
@@ -446,6 +446,9 @@
     gallery.querySelectorAll('.oj-book-btn').forEach(btn => {
       btn.addEventListener('click', () => openForm(getFlight(btn.dataset.id)));
     });
+    gallery.querySelectorAll('.oj-thumb-link').forEach(el => {
+      el.addEventListener('click', () => { const u = el.dataset.url; if (u) window.open(u, '_blank'); });
+    });
   }
 
   function renderCarousel() {
@@ -455,6 +458,9 @@
     wrapper.innerHTML = flights.map(f => `<div class="oj-carousel-slide">${buildCard(f)}</div>`).join('');
     wrapper.querySelectorAll('.oj-book-btn').forEach(btn => {
       btn.addEventListener('click', () => openForm(getFlight(btn.dataset.id)));
+    });
+    wrapper.querySelectorAll('.oj-thumb-link').forEach(el => {
+      el.addEventListener('click', () => { const u = el.dataset.url; if (u) window.open(u, '_blank'); });
     });
     if (dots) {
       dots.innerHTML = flights.map((_, i) =>
