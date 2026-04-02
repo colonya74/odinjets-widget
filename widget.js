@@ -102,7 +102,8 @@
     width: 100%; height: 155px; border-radius: 14px;
     object-fit: cover; background: #ccc; display: block;
   }
-  .oj-thumb-link { display: block; border-radius: 14px; overflow: hidden; }
+  .oj-thumb-link { display: block; border-radius: 14px; overflow: hidden; cursor: pointer; }
+  .oj-thumb-link:hover .oj-flight-thumb { opacity: 0.88; transition: opacity 0.2s; }
   .oj-flight-route {
     display: flex; align-items: center; justify-content: space-between;
     font-size: 20px; font-weight: 700; gap: 12px;
@@ -321,7 +322,7 @@
     return `
       <div class="oj-flight-card${cls}">
         <div class="oj-aircraft-header">
-          <a href="${esc(flight.aircraft_url || '#')}" class="oj-aircraft-link">${esc(flight.aircraft || '')}</a>
+          <a href="${esc(flight.aircraft_url || '#')}" class="oj-aircraft-link" target="_blank" rel="noopener">${esc(flight.aircraft || '')}</a>
         </div>
         <a href="${esc(flight.aircraft_url || '#')}" class="oj-thumb-link" target="_blank" rel="noopener">
           <img class="oj-flight-thumb"
