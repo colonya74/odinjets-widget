@@ -102,8 +102,9 @@
     width: 100%; height: 155px; border-radius: 14px;
     object-fit: cover; background: #ccc; display: block;
   }
-  .oj-thumb-link { display: block; border-radius: 14px; overflow: hidden; cursor: pointer; }
-  .oj-thumb-link:hover .oj-flight-thumb { opacity: 0.88; transition: opacity 0.2s; }
+  .oj-thumb-link { display: block; border-radius: 14px; overflow: hidden; cursor: pointer !important; pointer-events: all !important; position: relative; z-index: 2; }
+  .oj-thumb-link:hover .oj-flight-thumb { opacity: 0.85; }
+  .oj-flight-thumb { transition: opacity 0.2s; }
   .oj-flight-route {
     display: flex; align-items: center; justify-content: space-between;
     font-size: 20px; font-weight: 700; gap: 12px;
@@ -335,7 +336,7 @@
             <div class="oj-route-code">${esc(flight.from)}</div>
             <div class="oj-route-city">${esc(flight.from_city)}</div>
           </div>
-          <div class="oj-arrow"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 24" width="44" height="16" style="display:block"><g fill="rgba(13,59,102,0.4)"><!-- Fuselage --><rect x="4" y="10" width="48" height="4" rx="2"/><ellipse cx="52" cy="12" rx="6" ry="2.2"/><!-- Aile principale delta --><path d="M18,12 L32,2 L36,12Z"/><path d="M18,12 L32,22 L36,12Z"/><!-- Dérive verticale --><path d="M6,12 L6,6 L10,12Z"/><!-- Moteurs (nacelles) --><rect x="24" y="8" width="8" height="2" rx="1"/><rect x="24" y="14" width="8" height="2" rx="1"/></g></svg></div>
+          <div class="oj-arrow"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 36" width="52" height="19" style="display:block"><g fill="rgba(13,59,102,0.42)"><path d="M5,18 C9,13 19,13 70,14 Q84,14 98,18 Q84,22 70,22 C19,23 9,23 5,18Z"/><path d="M38,14 L26,2 L56,14Z"/><path d="M38,22 L26,34 L56,22Z"/><path d="M10,14 L6,4 L16,14Z"/><path d="M8,17 L0,13 L14,16Z"/><path d="M8,19 L0,23 L14,20Z"/></g></svg></div>
           <div class="oj-route-item">
             <div class="oj-route-code">${esc(flight.to)}</div>
             <div class="oj-route-city">${esc(flight.to_city)}</div>
