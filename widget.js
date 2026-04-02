@@ -80,9 +80,9 @@
 
   /* Carte vol */
   .oj-flight-card {
-    flex: 0 0 320px; background: #F5F3F0; border-radius: 22px; padding: 20px;
+    flex: 0 0 275px; background: #F5F3F0; border-radius: 20px; padding: 15px;
     border: 1px solid rgba(13,59,102,0.08); display: flex; flex-direction: column;
-    gap: 16px; transition: all 0.3s; cursor: default;
+    gap: 12px; transition: all 0.3s; cursor: default;
     box-shadow: 0 2px 8px rgba(13,59,102,0.06);
   }
   .oj-flight-card:hover {
@@ -99,9 +99,10 @@
   }
   .oj-aircraft-link:hover { color: #D69C00; text-decoration: underline; }
   .oj-flight-thumb {
-    width: 100%; height: 180px; border-radius: 16px;
+    width: 100%; height: 155px; border-radius: 14px;
     object-fit: cover; background: #ccc; display: block;
   }
+  .oj-thumb-link { display: block; border-radius: 14px; overflow: hidden; }
   .oj-flight-route {
     display: flex; align-items: center; justify-content: space-between;
     font-size: 20px; font-weight: 700; gap: 12px;
@@ -322,16 +323,18 @@
         <div class="oj-aircraft-header">
           <a href="${esc(flight.aircraft_url || '#')}" class="oj-aircraft-link">${esc(flight.aircraft || '')}</a>
         </div>
-        <img class="oj-flight-thumb"
-          src="${esc(flight.image || PLACEHOLDER_IMG)}"
-          alt="${esc(flight.from)} → ${esc(flight.to)}"
-          onerror="this.src='${PLACEHOLDER_IMG}'">
+        <a href="${esc(flight.aircraft_url || '#')}" class="oj-thumb-link" target="_blank" rel="noopener">
+          <img class="oj-flight-thumb"
+            src="${esc(flight.image || PLACEHOLDER_IMG)}"
+            alt="${esc(flight.from)} → ${esc(flight.to)}"
+            onerror="this.src='${PLACEHOLDER_IMG}'">
+        </a>
         <div class="oj-flight-route">
           <div class="oj-route-item">
             <div class="oj-route-code">${esc(flight.from)}</div>
             <div class="oj-route-city">${esc(flight.from_city)}</div>
           </div>
-          <div class="oj-arrow">✈️</div>
+          <div class="oj-arrow"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 56 22" width="38" height="14" style="display:block"><path d="M2,11 Q5,10 48,9.5 L54,11 48,12.5 Q5,12 2,11Z" fill="rgba(13,59,102,0.35)"/><path d="M33,11 L50,19.5 L39,11 L50,2.5Z" fill="rgba(13,59,102,0.35)"/><ellipse cx="19" cy="10" rx="9" ry="2" fill="rgba(13,59,102,0.28)"/><path d="M8,11 L13,4.5 L15,4.5 L15,11Z" fill="rgba(13,59,102,0.35)"/><path d="M5,10 L15,10 L15,12 L5,12Z" fill="rgba(13,59,102,0.35)"/></svg></div>
           <div class="oj-route-item">
             <div class="oj-route-code">${esc(flight.to)}</div>
             <div class="oj-route-city">${esc(flight.to_city)}</div>
