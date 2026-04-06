@@ -14,6 +14,7 @@
     supabaseKey: script.getAttribute('data-supabase-key') || '',
     formspreeId: script.getAttribute('data-formspree-id') || '',
     containerId: script.getAttribute('data-container') || 'oj-empty-legs',
+    logoUrl:     script.getAttribute('data-logo-url') || '',
   };
 
   // ─────────────────────────────────────────────
@@ -204,6 +205,8 @@
     animation: ojSlideUp 0.5s ease;
   }
   .oj-thanks-icon { font-size: 64px; color: #EDB01A; margin-bottom: 20px; }
+  .oj-thanks-logo-wrap { width: 260px; height: 145px; overflow: hidden; display: flex; align-items: flex-start; justify-content: center; padding-left: 85px; margin: 0 auto 8px; }
+  .oj-thanks-logo { width: 260px; height: auto; display: block; flex-shrink: 0; }
   .oj-thanks-box h3 { font-size: 32px; font-weight: 700; margin: 0 0 12px; color: #0D3B66; }
   .oj-thanks-box p  { font-size: 15px; color: rgba(13,59,102,0.7); line-height: 1.6; margin: 0 0 30px; }
   .oj-btn-home {
@@ -250,28 +253,28 @@
   const TRANS = {
     fr: { name:'Nom *', name_ph:'Votre nom complet', email:'E-mail *', email_ph:'votre@email.com',
           phone:'Téléphone *', phone_ph:'+41 XX XXX XX XX', msg:'Message', msg_ph:'Informations supplémentaires...',
-          submit:'Envoyer', back:'Retour', duration:'Durée', seats:'Sièges', book:'Réserver ce vol',
+          submit:'Envoyer', back:'Retour', duration:'Durée', seats:'Sièges', book:'Demander ce vol',
           title:'Vols Empty Legs', subtitle:'Offres promotionnelles de la semaine',
           form_title:'Réserver votre vol', form_sub:'Complétez vos informations',
           thanks_title:'Merci !', thanks_msg:'Votre demande a été reçue. Notre équipe vous contactera dans les 24h.',
           back_home:'Retour à l\'accueil' },
     en: { name:'Name *', name_ph:'Your full name', email:'Email *', email_ph:'your@email.com',
           phone:'Phone *', phone_ph:'+41 XX XXX XX XX', msg:'Message', msg_ph:'Additional information...',
-          submit:'Send', back:'Back', duration:'Duration', seats:'Seats', book:'Book this flight',
+          submit:'Send', back:'Back', duration:'Duration', seats:'Seats', book:'Request this flight',
           title:'Empty Leg Flights', subtitle:'Weekly promotional offers',
           form_title:'Book your flight', form_sub:'Complete your details',
           thanks_title:'Thank you!', thanks_msg:'Your request has been received. Our team will contact you within 24 hours.',
           back_home:'Back to home' },
     de: { name:'Name *', name_ph:'Ihr vollständiger Name', email:'E-Mail *', email_ph:'ihre@email.com',
           phone:'Telefon *', phone_ph:'+41 XX XXX XX XX', msg:'Nachricht', msg_ph:'Zusätzliche Informationen...',
-          submit:'Senden', back:'Zurück', duration:'Dauer', seats:'Sitze', book:'Diesen Flug buchen',
+          submit:'Senden', back:'Zurück', duration:'Dauer', seats:'Sitze', book:'Diesen Flug anfragen',
           title:'Empty Leg Flüge', subtitle:'Wöchentliche Sonderangebote',
           form_title:'Flug buchen', form_sub:'Bitte Angaben vervollständigen',
           thanks_title:'Danke!', thanks_msg:'Ihre Anfrage wurde erhalten. Unser Team kontaktiert Sie innerhalb von 24 Stunden.',
           back_home:'Zurück zur Startseite' },
     es: { name:'Nombre *', name_ph:'Tu nombre completo', email:'Correo *', email_ph:'tu@email.com',
           phone:'Teléfono *', phone_ph:'+41 XX XXX XX XX', msg:'Mensaje', msg_ph:'Información adicional...',
-          submit:'Enviar', back:'Atrás', duration:'Duración', seats:'Asientos', book:'Reservar este vuelo',
+          submit:'Enviar', back:'Atrás', duration:'Duración', seats:'Asientos', book:'Solicitar este vuelo',
           title:'Vuelos Empty Leg', subtitle:'Ofertas de la semana',
           form_title:'Reservar vuelo', form_sub:'Complete sus datos',
           thanks_title:'¡Gracias!', thanks_msg:'Su solicitud ha sido recibida. Nuestro equipo le contactará en 24 horas.',
@@ -425,7 +428,7 @@
       <div class="oj-overlay" id="oj-thanks-section">
         <div class="oj-overlay-wrapper">
           <div class="oj-thanks-box">
-            <div class="oj-thanks-icon">✈️</div>
+            ${CFG.logoUrl ? `<div class="oj-thanks-logo-wrap"><img src="${CFG.logoUrl}" class="oj-thanks-logo" alt="OdinJets"></div>` : `<div class="oj-thanks-icon">✈️</div>`}
             <h3>${t('thanks_title')}</h3>
             <p>${t('thanks_msg')}</p>
             <button class="oj-btn-home" id="oj-home-btn">${t('back_home')}</button>
