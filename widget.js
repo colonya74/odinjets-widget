@@ -339,7 +339,7 @@
             <div class="oj-route-code">${esc(flight.from)}</div>
             <div class="oj-route-city">${esc(flight.from_city)}</div>
           </div>
-          <div class="oj-arrow"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 36" width="52" height="19" style="display:block"><g fill="rgba(13,59,102,0.42)"><path d="M5,18 C9,13 19,13 70,14 Q84,14 98,18 Q84,22 70,22 C19,23 9,23 5,18Z"/><path d="M38,14 L26,2 L56,14Z"/><path d="M38,22 L26,34 L56,22Z"/><path d="M10,14 L6,4 L16,14Z"/><path d="M8,17 L0,13 L14,16Z"/><path d="M8,19 L0,23 L14,20Z"/></g></svg></div>
+          <div class="oj-arrow">✈</div>
           <div class="oj-route-item">
             <div class="oj-route-code">${esc(flight.to)}</div>
             <div class="oj-route-city">${esc(flight.to_city)}</div>
