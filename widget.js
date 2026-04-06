@@ -145,7 +145,7 @@
   /* Formulaire */
   .oj-form-box {
     width: 100%; max-width: 600px; background: #F5F3F0; border-radius: 22px;
-    padding: 40px; border: 1px solid rgba(13,59,102,0.08);
+    padding: 24px; border: 1px solid rgba(13,59,102,0.08);
     box-shadow: 0 8px 32px rgba(13,59,102,0.08); animation: ojSlideRight 0.5s ease;
     position: relative;
   }
@@ -156,8 +156,8 @@
     cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s;
   }
   .oj-form-close:hover { background: rgba(13,59,102,0.2); }
-  .oj-form-header { text-align: center; margin-bottom: 30px; }
-  .oj-form-header h3 { font-size: 28px; font-weight: 700; margin: 0 0 8px; color: #0D3B66; }
+  .oj-form-header { text-align: center; margin-bottom: 14px; }
+  .oj-form-header h3 { font-size: 22px; font-weight: 700; margin: 0 0 6px; color: #0D3B66; }
   .oj-form-header p  { font-size: 14px; color: rgba(13,59,102,0.6); margin: 0; }
   .oj-flight-summary {
     background: rgba(237,176,26,0.08); border: 1px solid rgba(237,176,26,0.25);
@@ -165,7 +165,7 @@
     font-size: 13px; text-align: center; color: #0D3B66;
   }
   .oj-flight-summary strong { color: #D69C00; }
-  .oj-form-group { margin-bottom: 16px; display: flex; flex-direction: column; gap: 6px; }
+  .oj-form-group { margin-bottom: 10px; display: flex; flex-direction: column; gap: 4px; }
   .oj-form-label { font-size: 13px; font-weight: 600; color: #0D3B66; text-transform: uppercase; letter-spacing: 0.5px; }
   .oj-form-input, .oj-form-textarea {
     background: rgba(13,59,102,0.04); border: 1px solid rgba(13,59,102,0.15);
@@ -177,13 +177,13 @@
     outline: none; background: rgba(13,59,102,0.08);
     border-color: rgba(13,59,102,0.3); box-shadow: 0 0 0 3px rgba(237,176,26,0.1);
   }
-  .oj-form-textarea { resize: vertical; min-height: 100px; font-family: inherit; }
+  .oj-form-textarea { resize: vertical; min-height: 60px; font-family: inherit; }
   .oj-form-disclaimer {
     font-size: 11px; color: rgba(13,59,102,0.5);
-    text-align: center; margin-top: 16px; line-height: 1.5;
+    text-align: center; margin-top: 8px; line-height: 1.4;
   }
   .oj-form-buttons {
-    display: flex; gap: 12px; margin-top: 24px;
+    display: flex; gap: 12px; margin-top: 12px;
     align-items: center; justify-content: space-between;
   }
   .oj-form-buttons button {
@@ -226,7 +226,7 @@
     #oj-empty-legs { padding: 10px; }
     .oj-header h2 { font-size: 24px; }
     .oj-flight-card { flex: 0 0 280px; padding: 16px; }
-    .oj-form-box { padding: 30px 20px; }
+    .oj-form-box { padding: 20px 16px; }
     .oj-thanks-box { padding: 40px 20px; }
   }
   @media (max-width: 480px) {
@@ -237,8 +237,8 @@
     .oj-carousel-slide .oj-flight-thumb  { height: 160px; border-radius: 14px; }
     .oj-carousel-slide .oj-flight-price  { font-size: 18px; }
     .oj-carousel-slide .oj-book-btn      { font-size: 12px; }
-    .oj-form-box { padding: 25px 16px; border-radius: 16px; }
-    .oj-form-header h3 { font-size: 24px; }
+    .oj-form-box { padding: 16px 14px; border-radius: 16px; }
+    .oj-form-header h3 { font-size: 20px; }
     .oj-form-input, .oj-form-textarea { font-size: 16px; }
     .oj-form-buttons button { height: 44px; font-size: 12px; }
     .oj-thanks-icon { font-size: 48px; }
