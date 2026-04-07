@@ -303,6 +303,31 @@
 
   const PLACEHOLDER_IMG = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='180'%3E%3Crect fill='%23e0ddd8' width='320' height='180'/%3E%3Ctext x='50%25' y='50%25' fill='%23aaa' text-anchor='middle' dy='.3em' font-size='14' font-family='sans-serif'%3EPhoto manquante%3C/text%3E%3C/svg%3E";
 
+  /**
+   * Convertit les URLs Dropbox en lien direct (dl.dropboxusercontent.com)
+   * pour éviter les redirections 302 que Safari iOS refuse de suivre dans <img>.
+   *
+   * Transformations supportées :
+   *   https://www.dropbox.com/s/HASH/file.jpg?dl=0   → direct
+   *   https://www.dropbox.com/s/HASH/file.jpg?raw=1  → direct
+   *   https://www.dropbox.com/s/HASH/file.jpg?dl=1   → direct
+   *   https://www.dropbox.com/scl/fi/HASH/file.jpg?... → direct (nouveau format)
+   */
+  function fixDropboxUrl(url) {
+    if (!url || url.startsWith('data:')) return url;
+    try {
+      const u = new URL(url);
+      if (u.hostname === 'www.dropbox.com' || u.hostname === 'dropbox.com') {
+        u.hostname = 'dl.dropboxusercontent.com';
+        // Supprimer les paramètres dl= et raw= qui déclenchent la redirection
+        u.searchParams.delete('dl');
+        u.searchParams.delete('raw');
+        return u.toString();
+      }
+    } catch (e) { /* URL invalide, on la retourne telle quelle */ }
+    return url;
+  }
+
   // ─────────────────────────────────────────────
   // Supabase REST API (lecture seule, anon key)
   // ─────────────────────────────────────────────
@@ -330,7 +355,7 @@
         </div>
         <div class="oj-thumb-link" data-url="${esc(flight.aircraft_url || '')}">
           <img class="oj-flight-thumb"
-            src="${esc(flight.image || PLACEHOLDER_IMG)}"
+            src="${esc(fixDropboxUrl(flight.image) || PLACEHOLDER_IMG)}"
             alt="${esc(flight.from)} → ${esc(flight.to)}"
             onerror="this.src='${PLACEHOLDER_IMG}'">
         </div>
