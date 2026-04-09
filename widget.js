@@ -36,16 +36,41 @@
   .oj-header p  { font-size: 16px; color: rgba(255,255,255,0.7); margin: 0; }
 
   /* Galerie desktop */
+  .oj-gallery-wrapper {
+    position: relative;
+    max-width: 1620px;
+    margin: 0 auto;
+  }
   .oj-gallery-desktop {
     display: flex; gap: 20px; overflow-x: auto;
-    padding: 20px 40px; scroll-behavior: smooth;
+    padding: 20px 60px; scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.2) transparent;
-    justify-content: center;
+    justify-content: flex-start;
   }
+  .oj-gallery-desktop.oj-centered { justify-content: center; }
+  .oj-gallery-wrapper.oj-has-overflow .oj-gallery-desktop { scroll-snap-type: x mandatory; }
+  .oj-gallery-wrapper.oj-has-overflow .oj-flight-card { scroll-snap-align: start; }
   .oj-gallery-desktop::-webkit-scrollbar { height: 6px; }
   .oj-gallery-desktop::-webkit-scrollbar-track { background: transparent; }
   .oj-gallery-desktop::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 3px; }
+
+  /* Flèches navigation desktop (visibles seulement si >5 vols) */
+  .oj-desktop-nav {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    background: rgba(13,59,102,0.85); color: white; border: none;
+    width: 48px; height: 48px; border-radius: 50%; cursor: pointer;
+    font-size: 18px; display: none; align-items: center; justify-content: center;
+    transition: all 0.3s; z-index: 5;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+  }
+  .oj-desktop-nav:hover:not(:disabled) {
+    background: rgba(13,59,102,1); transform: translateY(-50%) scale(1.1);
+  }
+  .oj-desktop-nav:disabled { opacity: 0.3; cursor: not-allowed; }
+  .oj-desktop-nav.prev { left: 6px; }
+  .oj-desktop-nav.next { right: 6px; }
+  .oj-gallery-wrapper.oj-has-overflow .oj-desktop-nav { display: flex; }
 
   /* Carousel mobile */
   .oj-carousel { display: none; flex-direction: column; gap: 12px; }
@@ -253,28 +278,28 @@
   const TRANS = {
     fr: { name:'Nom *', name_ph:'Votre nom complet', email:'E-mail *', email_ph:'votre@email.com',
           phone:'Téléphone *', phone_ph:'+41 XX XXX XX XX', msg:'Message', msg_ph:'Informations supplémentaires...',
-          submit:'Envoyer', back:'Retour', duration:'Durée', seats:'Sièges', book:'Demander le vol',
+          submit:'Envoyer', back:'Retour', duration:'Durée', seats:'Sièges', book:'Demander ce vol',
           title:'Vols Empty Legs', subtitle:'Offres promotionnelles de la semaine',
           form_title:'Réserver votre vol', form_sub:'Complétez vos informations',
           thanks_title:'Merci !', thanks_msg:'Votre demande a été reçue. Notre équipe vous contactera dans les 24h.',
           back_home:'Retour à l\'accueil' },
     en: { name:'Name *', name_ph:'Your full name', email:'Email *', email_ph:'your@email.com',
           phone:'Phone *', phone_ph:'+41 XX XXX XX XX', msg:'Message', msg_ph:'Additional information...',
-          submit:'Send', back:'Back', duration:'Duration', seats:'Seats', book:'Request flight',
+          submit:'Send', back:'Back', duration:'Duration', seats:'Seats', book:'Request this flight',
           title:'Empty Leg Flights', subtitle:'Weekly promotional offers',
           form_title:'Book your flight', form_sub:'Complete your details',
           thanks_title:'Thank you!', thanks_msg:'Your request has been received. Our team will contact you within 24 hours.',
           back_home:'Back to home' },
     de: { name:'Name *', name_ph:'Ihr vollständiger Name', email:'E-Mail *', email_ph:'ihre@email.com',
           phone:'Telefon *', phone_ph:'+41 XX XXX XX XX', msg:'Nachricht', msg_ph:'Zusätzliche Informationen...',
-          submit:'Senden', back:'Zurück', duration:'Dauer', seats:'Sitze', book:'Flug anfragen',
+          submit:'Senden', back:'Zurück', duration:'Dauer', seats:'Sitze', book:'Diesen Flug anfragen',
           title:'Empty Leg Flüge', subtitle:'Wöchentliche Sonderangebote',
           form_title:'Flug buchen', form_sub:'Bitte Angaben vervollständigen',
           thanks_title:'Danke!', thanks_msg:'Ihre Anfrage wurde erhalten. Unser Team kontaktiert Sie innerhalb von 24 Stunden.',
           back_home:'Zurück zur Startseite' },
     es: { name:'Nombre *', name_ph:'Tu nombre completo', email:'Correo *', email_ph:'tu@email.com',
           phone:'Teléfono *', phone_ph:'+41 XX XXX XX XX', msg:'Mensaje', msg_ph:'Información adicional...',
-          submit:'Enviar', back:'Atrás', duration:'Duración', seats:'Asientos', book:'Solicitar vuelo',
+          submit:'Enviar', back:'Atrás', duration:'Duración', seats:'Asientos', book:'Solicitar este vuelo',
           title:'Vuelos Empty Leg', subtitle:'Ofertas de la semana',
           form_title:'Reservar vuelo', form_sub:'Complete sus datos',
           thanks_title:'¡Gracias!', thanks_msg:'Su solicitud ha sido recibida. Nuestro equipo le contactará en 24 horas.',
@@ -303,31 +328,6 @@
 
   const PLACEHOLDER_IMG = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='180'%3E%3Crect fill='%23e0ddd8' width='320' height='180'/%3E%3Ctext x='50%25' y='50%25' fill='%23aaa' text-anchor='middle' dy='.3em' font-size='14' font-family='sans-serif'%3EPhoto manquante%3C/text%3E%3C/svg%3E";
 
-  /**
-   * Convertit les URLs Dropbox en lien direct (dl.dropboxusercontent.com)
-   * pour éviter les redirections 302 que Safari iOS refuse de suivre dans <img>.
-   *
-   * Transformations supportées :
-   *   https://www.dropbox.com/s/HASH/file.jpg?dl=0   → direct
-   *   https://www.dropbox.com/s/HASH/file.jpg?raw=1  → direct
-   *   https://www.dropbox.com/s/HASH/file.jpg?dl=1   → direct
-   *   https://www.dropbox.com/scl/fi/HASH/file.jpg?... → direct (nouveau format)
-   */
-  function fixDropboxUrl(url) {
-    if (!url || url.startsWith('data:')) return url;
-    try {
-      const u = new URL(url);
-      if (u.hostname === 'www.dropbox.com' || u.hostname === 'dropbox.com') {
-        u.hostname = 'dl.dropboxusercontent.com';
-        // Supprimer les paramètres dl= et raw= qui déclenchent la redirection
-        u.searchParams.delete('dl');
-        u.searchParams.delete('raw');
-        return u.toString();
-      }
-    } catch (e) { /* URL invalide, on la retourne telle quelle */ }
-    return url;
-  }
-
   // ─────────────────────────────────────────────
   // Supabase REST API (lecture seule, anon key)
   // ─────────────────────────────────────────────
@@ -355,7 +355,7 @@
         </div>
         <div class="oj-thumb-link" data-url="${esc(flight.aircraft_url || '')}">
           <img class="oj-flight-thumb"
-            src="${esc(fixDropboxUrl(flight.image) || PLACEHOLDER_IMG)}"
+            src="${esc(flight.image || PLACEHOLDER_IMG)}"
             alt="${esc(flight.from)} → ${esc(flight.to)}"
             onerror="this.src='${PLACEHOLDER_IMG}'">
         </div>
@@ -397,7 +397,9 @@
           <p>${t('subtitle')}</p>
         </div>
         <div class="oj-gallery-wrapper" id="oj-gallery-wrapper">
+          <button class="oj-desktop-nav prev" id="oj-desktop-prev" aria-label="Précédent" title="Précédent"><i class="fas fa-chevron-left"></i></button>
           <div class="oj-gallery-desktop" id="oj-gallery-desktop"></div>
+          <button class="oj-desktop-nav next" id="oj-desktop-next" aria-label="Suivant" title="Suivant"><i class="fas fa-chevron-right"></i></button>
         </div>
         <div class="oj-carousel" id="oj-carousel">
           <div class="oj-carousel-wrapper" id="oj-carousel-wrapper"></div>
@@ -469,6 +471,7 @@
 
   function renderDesktop() {
     const gallery = document.getElementById('oj-gallery-desktop');
+    const wrapper = document.getElementById('oj-gallery-wrapper');
     if (!gallery) return;
     gallery.innerHTML = flights.map(f => buildCard(f)).join('');
     gallery.querySelectorAll('.oj-book-btn').forEach(btn => {
@@ -477,6 +480,29 @@
     gallery.querySelectorAll('.oj-thumb-link').forEach(el => {
       el.addEventListener('click', () => { const u = el.dataset.url; if (u) window.open(u, '_blank'); });
     });
+
+    // Affichage max 5 cartes à l'écran : flèches actives uniquement si >5 vols
+    const hasOverflow = flights.length > 5;
+    if (wrapper) wrapper.classList.toggle('oj-has-overflow', hasOverflow);
+    gallery.classList.toggle('oj-centered', !hasOverflow);
+
+    const prevBtn = document.getElementById('oj-desktop-prev');
+    const nextBtn = document.getElementById('oj-desktop-next');
+    if (prevBtn && nextBtn) {
+      const cardStep = () => {
+        const card = gallery.querySelector('.oj-flight-card');
+        return card ? card.offsetWidth + 20 : 295;
+      };
+      prevBtn.onclick = () => gallery.scrollBy({ left: -cardStep(), behavior: 'smooth' });
+      nextBtn.onclick = () => gallery.scrollBy({ left:  cardStep(), behavior: 'smooth' });
+      const updateDesktopNav = () => {
+        prevBtn.disabled = gallery.scrollLeft <= 2;
+        nextBtn.disabled = gallery.scrollLeft + gallery.clientWidth >= gallery.scrollWidth - 2;
+      };
+      gallery.addEventListener('scroll', updateDesktopNav);
+      setTimeout(updateDesktopNav, 60);
+      window.addEventListener('resize', updateDesktopNav);
+    }
   }
 
   function renderCarousel() {
