@@ -328,6 +328,49 @@
 
   const PLACEHOLDER_IMG = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='180'%3E%3Crect fill='%23e0ddd8' width='320' height='180'/%3E%3Ctext x='50%25' y='50%25' fill='%23aaa' text-anchor='middle' dy='.3em' font-size='14' font-family='sans-serif'%3EPhoto manquante%3C/text%3E%3C/svg%3E";
 
+  /**
+   * Nettoie et normalise une URL d'image pour compatibilité Safari.
+   * - Décode les &amp; déjà encodés en HTML (évite le double-encodage)
+   * - Force ?raw=1 sur les liens Dropbox (Safari reçoit du HTML sinon)
+   * - Convertit les liens Google Drive /file/d/ en lien direct
+   * - Ré-encode proprement les & en &amp; pour l'attribut HTML
+   */
+  function sanitizeImageUrl(raw) {
+    if (!raw) return PLACEHOLDER_IMG;
+    let url = String(raw).trim();
+    // 1. Décoder tout &amp; existant pour repartir d'une URL propre
+    //    (gère le cas où la DB stocke des URLs déjà HTML-encodées)
+    while (url.indexOf('&amp;') !== -1) {
+      url = url.replace(/&amp;/g, '&');
+    }
+    // 2. Dropbox : s'assurer que raw=1 est présent (sinon Safari reçoit une page HTML)
+    //    dl=0 → page preview Dropbox (HTML), dl=1 → téléchargement forcé
+    //    Les deux cassent l'affichage inline sur Safari. raw=1 = affichage direct.
+    if (url.indexOf('dropbox.com') !== -1) {
+      // Retirer dl=0 / dl=1 proprement (gère ?dl=1, &dl=1, et le & orphelin)
+      url = url.replace(/([?&])dl=[01](&|$)/g, function(match, prefix, suffix) {
+        // Si c'était le premier param (?dl=1&...) → garder le ? pour la suite
+        if (prefix === '?' && suffix === '&') return '?';
+        // Si c'était le dernier param (&dl=1) → retirer complètement
+        if (prefix === '&') return '';
+        // Si c'était le seul param (?dl=1) → retirer le ?
+        return '';
+      });
+      // Nettoyer un éventuel ? orphelin en fin d'URL
+      url = url.replace(/\?$/, '');
+      if (url.indexOf('raw=1') === -1) {
+        url += (url.indexOf('?') !== -1 ? '&' : '?') + 'raw=1';
+      }
+    }
+    // 3. Google Drive : convertir /file/d/ID/view en lien direct
+    var gdMatch = url.match(/drive\.google\.com\/file\/d\/([^/]+)/);
+    if (gdMatch) {
+      url = 'https://drive.google.com/uc?export=view&id=' + gdMatch[1];
+    }
+    // 4. Ré-encoder & → &amp; pour insertion sûre dans l'attribut HTML
+    return url.replace(/&/g, '&amp;');
+  }
+
   // ─────────────────────────────────────────────
   // Supabase REST API (lecture seule, anon key)
   // ─────────────────────────────────────────────
@@ -355,9 +398,10 @@
         </div>
         <div class="oj-thumb-link" data-url="${esc(flight.aircraft_url || '')}">
           <img class="oj-flight-thumb"
-            src="${esc(flight.image || PLACEHOLDER_IMG)}"
+            src="${sanitizeImageUrl(flight.image)}"
             alt="${esc(flight.from)} → ${esc(flight.to)}"
-            onerror="this.src='${PLACEHOLDER_IMG}'">
+            crossorigin="anonymous"
+            onerror="this.onerror=null;this.removeAttribute('crossorigin');this.src='${PLACEHOLDER_IMG}'">
         </div>
         <div class="oj-flight-route">
           <div class="oj-route-item">
@@ -674,6 +718,18 @@
     updateLayout();
     window.addEventListener('resize', updateLayout);
 
+    // Safari fallback : vérifier que les images sont réellement décodables
+    // (Dropbox peut renvoyer un 200 avec du HTML → onerror ne se déclenche pas,
+    //  mais naturalWidth reste 0 et Safari affiche un point d'interrogation bleu)
+    setTimeout(function() {
+      container.querySelectorAll('.oj-flight-thumb').forEach(function(img) {
+        if (img.complete && img.naturalWidth === 0 && img.src.indexOf('data:') !== 0) {
+          img.removeAttribute('crossorigin');
+          img.src = PLACEHOLDER_IMG;
+        }
+      });
+    }, 3000);
+
     if (typeof Weglot !== 'undefined') {
       document.addEventListener('weglot:language_changed', () => {
         setTimeout(() => {
@@ -682,6 +738,15 @@
           renderCarousel();
           attachFormListeners();
           updateLayout();
+          // Safari fallback après re-render Weglot
+          setTimeout(function() {
+            container.querySelectorAll('.oj-flight-thumb').forEach(function(img) {
+              if (img.complete && img.naturalWidth === 0 && img.src.indexOf('data:') !== 0) {
+                img.removeAttribute('crossorigin');
+                img.src = PLACEHOLDER_IMG;
+              }
+            });
+          }, 3000);
         }, 150);
       });
     }
