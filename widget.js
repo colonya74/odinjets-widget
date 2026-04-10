@@ -400,8 +400,7 @@
           <img class="oj-flight-thumb"
             src="${sanitizeImageUrl(flight.image)}"
             alt="${esc(flight.from)} → ${esc(flight.to)}"
-            crossorigin="anonymous"
-            onerror="this.onerror=null;this.removeAttribute('crossorigin');this.src='${PLACEHOLDER_IMG}'">
+            onerror="this.onerror=null;this.src='${PLACEHOLDER_IMG}'">
         </div>
         <div class="oj-flight-route">
           <div class="oj-route-item">
@@ -724,7 +723,6 @@
     setTimeout(function() {
       container.querySelectorAll('.oj-flight-thumb').forEach(function(img) {
         if (img.complete && img.naturalWidth === 0 && img.src.indexOf('data:') !== 0) {
-          img.removeAttribute('crossorigin');
           img.src = PLACEHOLDER_IMG;
         }
       });
@@ -742,7 +740,6 @@
           setTimeout(function() {
             container.querySelectorAll('.oj-flight-thumb').forEach(function(img) {
               if (img.complete && img.naturalWidth === 0 && img.src.indexOf('data:') !== 0) {
-                img.removeAttribute('crossorigin');
                 img.src = PLACEHOLDER_IMG;
               }
             });
